@@ -33,8 +33,7 @@ namespace ubn {
                 while (fgets(buffer.data(), buffer.size(), pipe.get()) != nullptr) { *result << buffer.data(); }
                 return result;
             }};
-            auto ftr{std::make_unique<std::future<std::invoke_result_t<decltype(task), decltype(cmd)>>>(std::async(std::launch::async, std::move(task), cmd))};
-            return ftr;
+            return std::make_unique<std::future<std::invoke_result_t<decltype(task), decltype(cmd)>>>(std::async(std::launch::async, std::move(task), cmd));
         }
     }
 
