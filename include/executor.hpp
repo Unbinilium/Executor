@@ -14,7 +14,7 @@
 
 namespace ubn {
     namespace __executor::impl {
-        enum __policy { async_until_finish };
+        enum __policy { async_until_finish, async_realtime, async_try_wait, sync_until_finish, sync_realtime, sync_try_wait };
 
         enum __errors { no_implementation, popen_failed };
 
@@ -33,7 +33,7 @@ namespace ubn {
                 while (fgets(buffer.data(), buffer.size(), pipe.get()) != nullptr) { *result << buffer.data(); }
                 return result;
             }};
-            auto ftr{std::make_unique<std::future<std::unique_ptr<std::stringstream>>>(std::async(std::launch::async, std::move(task), cmd))};
+            auto ftr{std::make_unique<std::future<std::invoke_result_t<decltype(task), decltype(cmd)>>>(std::async(std::launch::async, std::move(task), cmd))};
             return ftr;
         }
     }
