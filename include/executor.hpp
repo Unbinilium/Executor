@@ -14,12 +14,12 @@
 
 namespace ubn {
     namespace __executor::impl {
-        enum __policy { async_until_finish, async_realtime, async_try_wait, sync_until_finish, sync_realtime, sync_try_wait };
+        enum __policy { async_wait, async_wait_for, async_wait_until, async_realtime, sync_wait, sync_wait_for, sync_wait_until, sync_realtime };
 
         enum __errors { no_implementation, popen_failed };
 
         std::unordered_map<__errors, const char *> __error_msg {
-            {__errors::no_implementation, "policy no implementation!"},
+            {__errors::no_implementation, "no policy implementation!"},
             {__errors::popen_failed, "popen() failed!"}
         };
 
@@ -46,7 +46,7 @@ namespace ubn {
 
         template <std::size_t BufferSize = buffer_size>
         static inline constexpr decltype(auto) executor(const policy exec_policy, const std::string_view& cmd) {
-            if (exec_policy == policy::async_until_finish) {
+            if (exec_policy == policy::async_wait) {
                 return __executor::impl::__async_until_finish<BufferSize>(cmd);
             } else {
                 throw std::runtime_error(__executor::impl::__error_msg.at(errors::no_implementation));
@@ -55,7 +55,7 @@ namespace ubn {
 
         template <std::size_t BufferSize = buffer_size>
         static inline constexpr decltype(auto) executor(const std::string_view& cmd) {
-            return executor<BufferSize>(policy::async_until_finish, cmd);
+            return executor<BufferSize>(policy::async_wait, cmd);
         }
     }
 }
