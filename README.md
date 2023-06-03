@@ -43,8 +43,8 @@ int main() {
 #include "executor.hpp"
 
 int main() {
-    const char* cmd = "ping 8.8.8.8 -c 4";
-    auto exec_ftr = ubn::executor::executor<128ul>(ubn::exector::policy::async_wait, cmd);   
+    const char* cmd = "ping 127.0.0.1 -c 4";
+    auto exec_ftr = ubn::executor::executor<128ul>(ubn::executor::policy::async_wait, cmd);   
     std::cout << exec_ftr->get()->str();
 }
 ```
