@@ -38,12 +38,24 @@ namespace ubn {
         }
     }
 
-    template <__executor::impl::__policy policy = __executor::impl::__policy::async_until_finish, std::size_t buffer_size = 64>
-    static inline decltype(auto) executor(const std::string_view& cmd) {
-        if constexpr (policy == __executor::impl::__policy::async_until_finish) {
-            return __executor::impl::__async_until_finish<buffer_size>(cmd);
-        } else {
-            throw std::runtime_error(__executor::impl::__error_msg.at(__executor::impl::__errors::no_implementation));
+    namespace executor {
+        using policy = __executor::impl::__policy;
+        using errors = __executor::impl::__errors;
+
+        static inline constexpr std::size_t buffer_size{64ul};
+
+        template <std::size_t BufferSize = buffer_size>
+        static inline constexpr decltype(auto) executor(const policy exec_policy, const std::string_view& cmd) {
+            if (exec_policy == policy::async_until_finish) {
+                return __executor::impl::__async_until_finish<BufferSize>(cmd);
+            } else {
+                throw std::runtime_error(__executor::impl::__error_msg.at(errors::no_implementation));
+            }
+        }
+
+        template <std::size_t BufferSize = buffer_size>
+        static inline constexpr decltype(auto) executor(const std::string_view& cmd) {
+            return executor<BufferSize>(policy::async_until_finish, cmd);
         }
     }
 }
