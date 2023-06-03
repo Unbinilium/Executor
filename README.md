@@ -60,8 +60,12 @@ int main() {
 ## TODO
 
 1. Support `ubn::exector::policy::async_realtime`
-2. Support `ubn::exector::policy::sync_until_finish`
-3. Support `ubn::exector::policy::sync_realtime`
+2. Support `ubn::exector::policy::async_wait_for`
+3. Support `ubn::exector::policy::async_wait_until`
+4. Support `ubn::exector::policy::sync_until_finish`
+5. Support `ubn::exector::policy::sync_realtime`
+6. Support `ubn::exector::policy::sync_wait_for`
+7. Support `ubn::exector::policy::sync_wait_until`
 
 
 ## License
