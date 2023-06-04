@@ -14,9 +14,9 @@
 
 namespace ubn {
     namespace __executor::impl {
-        enum __policy { async_wait, async_wait_for, async_wait_until, async_realtime, sync_wait, sync_wait_for, sync_wait_until, sync_realtime };
+        enum class __policy { async_wait, async_wait_for, async_wait_until, async_realtime, sync_wait, sync_wait_for, sync_wait_until, sync_realtime };
 
-        enum __errors { no_implementation, popen_failed };
+        enum class __errors { no_implementation, popen_failed };
 
         std::unordered_map<__errors, const char *> __error_msg {
             {__errors::no_implementation, "no policy implementation!"},
@@ -24,7 +24,7 @@ namespace ubn {
         };
 
         template <std::size_t buffer_size>
-        static inline decltype(auto) __async_until_finish(const std::string_view& cmd) {
+        static inline decltype(auto) __async_wait(const std::string_view& cmd) {
             auto task{[](const std::string_view& __cmd) -> std::unique_ptr<std::stringstream> {
                 std::array<char, buffer_size> buffer{};
                 std::unique_ptr<std::stringstream> result{std::make_unique<std::stringstream>()};
@@ -46,7 +46,7 @@ namespace ubn {
         template <std::size_t BufferSize = buffer_size>
         static inline constexpr decltype(auto) executor(const policy exec_policy, const std::string_view& cmd) {
             if (exec_policy == policy::async_wait) {
-                return __executor::impl::__async_until_finish<BufferSize>(cmd);
+                return __executor::impl::__async_wait<BufferSize>(cmd);
             } else {
                 throw std::runtime_error(__executor::impl::__error_msg.at(errors::no_implementation));
             }
